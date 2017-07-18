@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "527314607561",
+    "firebase_url": "https://unclinte-veedu.firebaseio.com",
+    "project_id": "unclinte-veedu",
+    "storage_bucket": "unclinte-veedu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:527314607561:android:facfc5af2c5b95e8",
+        "android_client_info": {
+          "package_name": "com.expensetracker.unclinteveedu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "527314607561-a2c6kqu6cblf5ajnak0kfkjq47c1q0h7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.expensetracker.unclinteveedu",
+            "certificate_hash": "54080b76b09bd3119ad67a3f7f690a58d882faf8"
+          }
+        },
+        {
+          "client_id": "527314607561-32uqs5matjipof7bhgofm6g77mjad97d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf6IjoVzY_Ma5axRuVtZbKYDrxPdE0_L0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "527314607561-32uqs5matjipof7bhgofm6g77mjad97d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
