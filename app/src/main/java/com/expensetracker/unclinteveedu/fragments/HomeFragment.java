@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.models.ExpenseData;
 import com.expensetracker.unclinteveedu.models.UserModel;
 import com.expensetracker.unclinteveedu.adapters.UserAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -29,6 +32,7 @@ public class HomeFragment extends Fragment {
 
     private UserAdapter mUserAdapter;
     private List<UserModel> mUserList;
+    private List<ExpenseData> mAllExpenses;
 
     public static HomeFragment newInstance() {
 
@@ -42,6 +46,7 @@ public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
         mUserList = new ArrayList<>();
+        mAllExpenses = new ArrayList<>();
     }
 
 
@@ -63,15 +68,42 @@ public class HomeFragment extends Fragment {
         mRvUser.setAdapter(mUserAdapter);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference mUsersReference = database.getReference("users");
-        mUsersReference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference mUsersReference = database.getReference("users");
+        database.getReference("expenses").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()){
-                    mUserList.add(ds.getValue(UserModel.class));
+                double totalExpense = 0;
+                final Map<String, Double> userSpentData = new HashMap<String, Double>();
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    mAllExpenses.add(ds.getValue(ExpenseData.class));
+                    Double amount = ds.child("amount").getValue(Double.class);
+                    totalExpense += amount;
+                    String userId = ds.child("paidByUser").getValue(String.class);
+                    Double userPaidAmount = userSpentData.get(userId);
+                    userSpentData.put(userId, userPaidAmount == null ? amount : userPaidAmount + amount);
                 }
 
-                mUserAdapter.setUserList(mUserList);
+
+                final double finalTotalExpense = totalExpense;
+                mUsersReference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            UserModel userData = ds.getValue(UserModel.class);
+                            Double currentUserPayment = userSpentData.get(userData.userId);
+                            userData.amount = (currentUserPayment == null ? 0 : currentUserPayment) - (finalTotalExpense / 5);
+                            mUserList.add(userData);
+                            mUserAdapter.setUserList(mUserList);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -79,7 +111,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
-        
+
+
     }
 
 

@@ -1,6 +1,7 @@
 package com.expensetracker.unclinteveedu.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.expensetracker.unclinteveedu.R;
 import com.expensetracker.unclinteveedu.models.UserModel;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +46,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                 .into(holder.mIvUser);
 
         holder.mTvUserName.setText(user.name);
-
+        holder.mTvAmount.setText(mContext.getString(R.string.Rs, user.amount > 0 ? "+" : "-", String.valueOf(Math.abs(user.amount))));
+        holder.mTvAmount.setTextColor(ContextCompat.getColor(mContext, user.amount > 0 ? R.color.colorGreen : R.color.colorRed));
     }
 
     @Override
@@ -60,11 +64,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         private ImageView mIvUser;
         private TextView mTvUserName;
+        private TextView mTvAmount;
 
         private UserViewHolder(View itemView) {
             super(itemView);
             mIvUser = (ImageView) itemView.findViewById(R.id.ivUser);
             mTvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
+            mTvAmount = (TextView) itemView.findViewById(R.id.tvAmount);
         }
     }
 }

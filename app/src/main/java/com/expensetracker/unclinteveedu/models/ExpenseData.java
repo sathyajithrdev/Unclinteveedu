@@ -5,10 +5,13 @@ package com.expensetracker.unclinteveedu.models;
  */
 
 public class ExpenseData {
+    public String id;
     public String expenseName;
     public double amount;
     public String paymentDate;
-    public String payeeUserName;
+    public String paidByUser;
     public String createdDate;
     public String createdUser;
+    public String imageUrl;
+    public boolean isClosed;
 }

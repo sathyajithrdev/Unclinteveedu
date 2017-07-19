@@ -6,6 +6,7 @@ package com.expensetracker.unclinteveedu.models;
 
 public class UserModel {
     public String userName;
+    public String userId;
     public String name;
     public String profileImage;
     public double amount;
