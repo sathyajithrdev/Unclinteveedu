@@ -1,5 +1,6 @@
 package com.expensetracker.unclinteveedu.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,85 +30,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // primary sections of the activity.
         initView();
 
-
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_LONG).show();
-//                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                final DatabaseReference expenseRef = database.getReference("expenses");
-//                final Query mUsersReference = expenseRef.orderByChild("month").equalTo("2017-08");
-//
-//                mUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Log.e("TestFirebase", String.valueOf(dataSnapshot == null));
-//                        if (dataSnapshot == null || dataSnapshot.getValue() == null) {
-//                            DatabaseReference dr = expenseRef.push();
-//
-//                            List<UserModel> userAmountData = new ArrayList<UserModel>();
-//                            userAmountData.add(new UserModel("aswin", 1000));
-//                            userAmountData.add(new UserModel("jophy", 2000));
-//                            ExpenseFirebaseModel expenseModel = new ExpenseFirebaseModel();
-//                            expenseModel.month = "2017-08";
-//                            expenseModel.userAmountList = userAmountData;
-//                            ExpenseData e = new ExpenseData();
-//                            e.amount = 10000;
-//                            e.expenseName = "Rent";
-//
-//                            dr.setValue(expenseModel);
-//
-//                            Toast.makeText(MainActivity.this, "Added", Toast.LENGTH_LONG).show();
-//                        } else {
-//                            ExpenseData e = new ExpenseData();
-//                            e.amount = 10000;
-//                            e.expenseName = "Rent";
-//                            for (DataSnapshot d : dataSnapshot.getChildren()) {
-//                                ExpenseFirebaseModel dd = d.getValue(ExpenseFirebaseModel.class);
-//                                Log.e("TestFirebase", dd.expenseDataList.size() + "");
-//
-//                                expenseRef.child(d.getKey()).child("expenseDataList").push().setValue(e);
-//
-//                                Log.e("TestFirebase", d.getKey());
-//                                break;
-//                            }
-//
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//        });
-
-//        fab.setOnTouchListener(this);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_LONG).show();
-//                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-//                final DatabaseReference mUsersReference = database.getReference("expenses");
-//                mUsersReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        if (!dataSnapshot.hasChild("2017-08")) {
-//                            mUsersReference.setValue("2017-08");
-//                            Toast.makeText(MainActivity.this, "Added", Toast.LENGTH_LONG).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//        });
-
     }
 
     private void initView() {
@@ -121,14 +43,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_home);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_history);
         findViewById(R.id.ivAddPayment).setOnClickListener(this);
+        findViewById(R.id.ivAddPayment).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ivAddPayment: {
-                addPayment();
+                startActivity(new Intent(MainActivity.this, ExpenseDetailActivity.class));
+                break;
             }
+
         }
     }
 
