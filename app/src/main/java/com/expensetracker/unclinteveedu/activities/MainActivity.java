@@ -7,19 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
 import com.expensetracker.unclinteveedu.R;
 import com.expensetracker.unclinteveedu.fragments.HistoryFragment;
 import com.expensetracker.unclinteveedu.fragments.HomeFragment;
-import com.expensetracker.unclinteveedu.models.ExpenseData;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,28 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
         }
-    }
-
-    private void addPayment() {
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference expenseRef = database.getReference("expenses");
-        String expenseId = expenseRef.push().getKey();
-        ExpenseData expenseData = new ExpenseData();
-        expenseData.id = expenseId;
-        expenseData.expenseName = "Cooking Items";
-        expenseData.amount = 700;
-        expenseData.paidByUser = "0";
-        expenseData.paymentDate = "18-07-2017";
-        expenseData.createdDate = "19-07-2017";
-        expenseData.createdUser = "0";
-        expenseRef.child(expenseId).setValue(expenseData, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    Toast.makeText(MainActivity.this, "Expense added successfully", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
 

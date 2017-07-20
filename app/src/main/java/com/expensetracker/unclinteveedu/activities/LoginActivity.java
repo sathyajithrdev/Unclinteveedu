@@ -6,9 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
@@ -25,7 +23,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference mUsersReference = database.getReference("users");
@@ -102,9 +100,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (dataSnapshot != null) {
                         for (DataSnapshot d : dataSnapshot.getChildren()) {
                             if (d.child("password").getValue().toString().equals(password)) {
+                                setLoggedInPreference(true);
+                                setLoggedInUserId(d.child("userId").getValue().toString());
                                 showProgress(false);
                                 isValid = true;
-                                Toast.makeText(LoginActivity.this, "Sign in successful", Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 LoginActivity.this.supportFinishAfterTransition();
                                 break;

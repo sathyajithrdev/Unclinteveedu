@@ -10,9 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.adapters.UserAdapter;
+import com.expensetracker.unclinteveedu.managers.DatabaseManager;
 import com.expensetracker.unclinteveedu.models.ExpenseData;
 import com.expensetracker.unclinteveedu.models.UserModel;
-import com.expensetracker.unclinteveedu.adapters.UserAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +34,7 @@ public class HomeFragment extends Fragment {
     private UserAdapter mUserAdapter;
     private List<UserModel> mUserList;
     private List<ExpenseData> mAllExpenses;
+    private DatabaseManager mDatabaseManager;
 
     public static HomeFragment newInstance() {
 
@@ -47,6 +49,7 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
         mUserList = new ArrayList<>();
         mAllExpenses = new ArrayList<>();
+        mDatabaseManager = new DatabaseManager();
     }
 
 
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         initializeView(view);
+
         return view;
     }
 
@@ -69,10 +73,11 @@ public class HomeFragment extends Fragment {
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference mUsersReference = database.getReference("users");
-        database.getReference("expenses").addListenerForSingleValueEvent(new ValueEventListener() {
+        database.getReference("expenses").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 double totalExpense = 0;
+                mAllExpenses = new ArrayList<>();
                 final Map<String, Double> userSpentData = new HashMap<String, Double>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -89,13 +94,15 @@ public class HomeFragment extends Fragment {
                 mUsersReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        mUserList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             UserModel userData = ds.getValue(UserModel.class);
                             Double currentUserPayment = userSpentData.get(userData.userId);
                             userData.amount = (currentUserPayment == null ? 0 : currentUserPayment) - (finalTotalExpense / 5);
                             mUserList.add(userData);
-                            mUserAdapter.setUserList(mUserList);
                         }
+                        mUserAdapter.setUserList(mUserList);
+                        mDatabaseManager.saveUserDetails(mUserList);
                     }
 
                     @Override
@@ -115,6 +122,11 @@ public class HomeFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mDatabaseManager.onDestroy();
+    }
 
     private class UserSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
 

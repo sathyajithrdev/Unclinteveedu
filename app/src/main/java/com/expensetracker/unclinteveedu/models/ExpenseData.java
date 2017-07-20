@@ -1,10 +1,14 @@
 package com.expensetracker.unclinteveedu.models;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
 /**
  * Created by sathyajith on 19/07/17.
  */
 
-public class ExpenseData {
+public class ExpenseData extends RealmObject {
+    @PrimaryKey
     public String id;
     public String expenseName;
     public double amount;
