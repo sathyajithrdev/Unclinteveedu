@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.interfaces.ClickListener;
 import com.expensetracker.unclinteveedu.models.UserModel;
 
 import java.util.ArrayList;
@@ -24,9 +25,11 @@ public class PayeeAdapter extends RecyclerView.Adapter<PayeeAdapter.PayeeViewHol
     private Context mContext;
     private List<UserModel> mUserList;
     private Integer selectedPosition;
+    private ClickListener mClickListener;
 
-    public PayeeAdapter(Context context) {
+    public PayeeAdapter(Context context, ClickListener clickListener) {
         this.mContext = context;
+        mClickListener = clickListener;
         mUserList = new ArrayList<>();
     }
 
@@ -46,6 +49,7 @@ public class PayeeAdapter extends RecyclerView.Adapter<PayeeAdapter.PayeeViewHol
             @Override
             public void onClick(View v) {
                 selectedPosition = holder.getAdapterPosition();
+                mClickListener.isItemClicked();
                 notifyDataSetChanged();
             }
         });

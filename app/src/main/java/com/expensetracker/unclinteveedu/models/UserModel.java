@@ -16,7 +16,7 @@ public class UserModel extends RealmObject {
     public String name;
     public String profileImage;
     public double amount;
-    public RealmList<PaymentData> paymentDetails;
+    public RealmList<ExpenseData> paymentDetails;
 
     public UserModel() {
         paymentDetails = new RealmList<>();

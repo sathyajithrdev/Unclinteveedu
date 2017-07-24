@@ -72,15 +72,16 @@
                     android:textSize="24dp" />
 
                 <ImageView
+                    android:id="@+id/ivAddPayment"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="16dp"
-                    android:layout_toStartOf="@+id/ivAddPayment"
+                    android:layout_toStartOf="@+id/ivAddExpense"
                     app:srcCompat="@drawable/ic_payment" />
 
                 <ImageView
-                    android:id="@+id/ivAddPayment"
+                    android:id="@+id/ivAddExpense"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"

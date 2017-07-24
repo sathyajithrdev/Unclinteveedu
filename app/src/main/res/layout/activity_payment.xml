@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.expensetracker.unclinteveedu.activities.ExpenseDetailActivity">
-
+    tools:context="com.expensetracker.unclinteveedu.activities.PaymentActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -30,7 +29,7 @@
                     android:id="@+id/etExpenditure"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/expenditure"
+                    android:hint="@string/payment_name"
                     android:imeOptions="actionUnspecified"
                     android:inputType="text"
                     android:textColor="@color/colorWhite"
@@ -68,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="false"
-                    android:hint="@string/expense_date"
+                    android:hint="@string/payment_date"
                     android:imeOptions="actionUnspecified"
                     android:inputType="date"
                     android:textColor="@color/colorWhite"
@@ -97,7 +96,34 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/payee"
+                android:text="@string/payee_mandatory"
+                android:textColor="@color/colorRed"
+                android:textSize="14sp"
+                android:visibility="invisible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/paid_to"
+                android:textSize="19sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPaidTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/rectangle_non_solid" />
+
+            <TextView
+                android:id="@+id/tvErrorPaidTo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/paid_to_mandatory"
                 android:textColor="@color/colorRed"
                 android:textSize="14sp"
                 android:visibility="invisible" />
@@ -129,11 +155,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:text="@string/add_expense"
+        android:text="@string/addPayment"
         android:textColor="@color/colorWhite" />
 
     <include
         android:id="@+id/layoutProgress"
         layout="@layout/progress_layout"
         android:visibility="gone" />
+
 </RelativeLayout>

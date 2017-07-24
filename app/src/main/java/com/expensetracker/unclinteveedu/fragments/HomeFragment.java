@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 double totalExpense = 0;
                 mAllExpenses = new ArrayList<>();
-                final Map<String, Double> userSpentData = new HashMap<String, Double>();
+                final Map<String, Double> userSpentData = new HashMap<>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     mAllExpenses.add(ds.getValue(ExpenseData.class));
@@ -94,12 +94,32 @@ public class HomeFragment extends Fragment {
                 mUsersReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        final Map<String, Double> userReceivedAmountData = new HashMap<>();
+
                         mUserList = new ArrayList<>();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             UserModel userData = ds.getValue(UserModel.class);
                             Double currentUserPayment = userSpentData.get(userData.userId);
+                            if (currentUserPayment == null)
+                                currentUserPayment = 0d;
+                            DataSnapshot paymentsNode = ds.child("payments");
+                            for (DataSnapshot paymentSnapShot : paymentsNode.getChildren()) {
+                                ExpenseData paymentData = paymentSnapShot.getValue(ExpenseData.class);
+                                if (paymentData != null) {
+                                    userData.paymentDetails.add(paymentData);
+                                    currentUserPayment += paymentData.amount;
+                                    Double receivedAmount = userReceivedAmountData.get(paymentData.paidToUser);
+                                    userReceivedAmountData.put(paymentData.paidToUser, receivedAmount == null
+                                            ? paymentData.amount : receivedAmount + paymentData.amount);
+
+                                }
+                            }
                             userData.amount = (currentUserPayment == null ? 0 : currentUserPayment) - (finalTotalExpense / 5);
                             mUserList.add(userData);
+
+                        }
+                        for (UserModel u : mUserList) {
+                            u.amount = u.amount - (userReceivedAmountData.get(u.userId) == null ? 0 : userReceivedAmountData.get(u.userId));
                         }
                         mUserAdapter.setUserList(mUserList);
                         mDatabaseManager.saveUserDetails(mUserList);

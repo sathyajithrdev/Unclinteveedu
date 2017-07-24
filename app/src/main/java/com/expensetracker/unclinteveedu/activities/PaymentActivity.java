@@ -43,11 +43,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class ExpenseDetailActivity extends BaseActivity implements View.OnClickListener, PhoneFeaturePermissionHelper.PhoneFeaturePermission, ClickListener {
+public class PaymentActivity extends BaseActivity implements View.OnClickListener, PhoneFeaturePermissionHelper.PhoneFeaturePermission, ClickListener {
 
     private Calendar selectedDate = Calendar.getInstance();
     private DatabaseManager mDatabaseManager;
     private PayeeAdapter mPayeeAdapter;
+    private PayeeAdapter mPaidToAdapter;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
     private TextInputLayout mTilExpenseName;
     private TextInputLayout mTilExpenseDate;
@@ -62,13 +63,11 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
     private StorageReference mStorageRef;
     private Uri firebaseImageUrl;
 
-
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_expense_detail);
-        getSupportActionBar().setTitle("Add Expense");
+        setContentView(R.layout.activity_payment);
+        getSupportActionBar().setTitle("Add Payment");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         initClickListeners();
         initComponents();
@@ -80,6 +79,7 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mPhoneFeaturePermissionHelper = new PhoneFeaturePermissionHelper(this);
         List<UserModel> mUserList = mDatabaseManager.getAllUserDetails();
+        List<UserModel> mPaidToList = mDatabaseManager.getAllUserDetails();
         setProgressLayout(R.id.layoutProgress);
         mTilExpenseName = (TextInputLayout) findViewById(R.id.tilExpenditure);
         mTilExpenseAmount = (TextInputLayout) findViewById(R.id.tilAmount);
@@ -91,9 +91,14 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
 
         RecyclerView rvPayee = (RecyclerView) findViewById(R.id.rvUsers);
         rvPayee.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL));
+        RecyclerView rvPaidTo = (RecyclerView) findViewById(R.id.rvPaidTo);
+        rvPaidTo.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL));
         mPayeeAdapter = new PayeeAdapter(this, this);
+        mPaidToAdapter = new PayeeAdapter(this, this);
         rvPayee.setAdapter(mPayeeAdapter);
+        rvPaidTo.setAdapter(mPaidToAdapter);
         mPayeeAdapter.setUserList(mUserList);
+        mPaidToAdapter.setUserList(mPaidToList);
     }
 
     private void initClickListeners() {
@@ -119,7 +124,7 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.etDate: {
-                new DatePickerDialog(ExpenseDetailActivity.this, date, selectedDate
+                new DatePickerDialog(PaymentActivity.this, date, selectedDate
                         .get(Calendar.YEAR), selectedDate.get(Calendar.MONTH),
                         selectedDate.get(Calendar.DAY_OF_MONTH)).show();
                 break;
@@ -162,10 +167,17 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
             isValid = false;
             mEtExpenseName.requestFocus();
         }
+
         if (mPayeeAdapter.getSelectedUserId() == null) {
             findViewById(R.id.tvErrorPayee).setVisibility(View.VISIBLE);
             isValid = false;
         }
+
+        if (mPaidToAdapter.getSelectedUserId() == null) {
+            findViewById(R.id.tvErrorPaidTo).setVisibility(View.VISIBLE);
+            isValid = false;
+        }
+
         return isValid;
     }
 
@@ -175,7 +187,8 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
 
     private void addPayment() {
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference expenseRef = database.getReference("expenses");
+        final DatabaseReference expenseRef =
+                database.getReference("users/" + mPayeeAdapter.getSelectedUserId() + "/payments");
         String expenseId = expenseRef.push().getKey();
         ExpenseData expenseData = new ExpenseData();
         expenseData.id = expenseId;
@@ -183,6 +196,7 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
         expenseData.expenseName = getEtText(R.id.etExpenditure);
         expenseData.amount = Double.parseDouble(getEtText(R.id.etAmount));
         expenseData.paidByUser = mPayeeAdapter.getSelectedUserId();
+        expenseData.paidToUser = mPaidToAdapter.getSelectedUserId();
         expenseData.paymentDate = getEtText(R.id.etDate);
         expenseData.createdDate = sdf.format(Calendar.getInstance().getTime());
         expenseData.createdUser = getLoggedInUserId();
@@ -192,10 +206,10 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
-                    Toast.makeText(ExpenseDetailActivity.this, R.string.info_success_payment, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PaymentActivity.this, R.string.info_success_payment, Toast.LENGTH_LONG).show();
                     supportFinishAfterTransition();
                 } else {
-                    Toast.makeText(ExpenseDetailActivity.this, R.string.error_network, Toast.LENGTH_LONG).show();
+                    Toast.makeText(PaymentActivity.this, R.string.error_network, Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -259,7 +273,7 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
         byte[] data = baos.toByteArray();
 
 
-        StorageReference billRef = mStorageRef.child("expenseImage/" + new File(filename).getName());
+        StorageReference billRef = mStorageRef.child("paymentImage/" + new File(filename).getName());
         UploadTask uploadTask = billRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -288,6 +302,6 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
     @Override
     public void isItemClicked() {
         findViewById(R.id.tvErrorPayee).setVisibility(View.INVISIBLE);
-
+        findViewById(R.id.tvErrorPaidTo).setVisibility(View.INVISIBLE);
     }
 }

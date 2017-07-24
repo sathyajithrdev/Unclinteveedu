@@ -14,6 +14,7 @@ public class ExpenseData extends RealmObject {
     public double amount;
     public String paymentDate;
     public String paidByUser;
+    public String paidToUser;
     public String createdDate;
     public String createdUser;
     public String imageUrl;

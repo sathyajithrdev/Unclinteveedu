@@ -30,4 +30,11 @@
     <string name="label_pick_image_intent">Select or Capture Image</string>
     <string name="permission_camera">Please allow camera and storage permission to upload bill image</string>
     <string name="error_add_expense">Something went wrong not able to add expense at this moment, please try again later.</string>
+    <string name="addPayment">Add Payment</string>
+    <string name="payment_name">Payment Name</string>
+    <string name="expense_date">Expense Date</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="paid_to">Paid To</string>
+    <string name="paid_to_mandatory">Please select paid to user name</string>
+    <string name="payee_mandatory">Please select the payee name</string>
 </resources>
