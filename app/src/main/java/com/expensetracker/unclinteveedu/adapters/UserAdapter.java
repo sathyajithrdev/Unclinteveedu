@@ -13,8 +13,6 @@ import com.bumptech.glide.Glide;
 import com.expensetracker.unclinteveedu.R;
 import com.expensetracker.unclinteveedu.models.UserModel;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 

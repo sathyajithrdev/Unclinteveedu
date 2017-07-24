@@ -22,4 +22,9 @@
         <item name="tabIndicatorHeight">5dp</item>
     </style>
 
+    <style name="error_appearance" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorRed</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
 </resources>

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "527314607561-th83dauk59o78of9oimds8279uev26cm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.expensetracker.unclinteveedu",
+            "certificate_hash": "5f177f58cfc0ffddd2ca8581151b5c2d9e4e94cd"
+          }
+        },
+        {
           "client_id": "527314607561-a2c6kqu6cblf5ajnak0kfkjq47c1q0h7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -5,6 +5,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
+
+import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.helpers.AlertHelper;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by sathyajith on 20/07/17.
@@ -12,6 +19,10 @@ import android.support.v7.app.AppCompatActivity;
  */
 
 public class BaseActivity<T> extends AppCompatActivity {
+
+    private AlertHelper mAlertHelper;
+    private View mProgressLayout;
+    private TextView mTvProgressMessage;
 
     SharedPreferences mPreference;
     SharedPreferences.Editor mEditor;
@@ -40,6 +51,12 @@ public class BaseActivity<T> extends AppCompatActivity {
 
     }
 
+    protected void showAlert(String message, boolean isCancellable) {
+        if (mAlertHelper == null)
+            mAlertHelper = new AlertHelper(this);
+        mAlertHelper.showAlert(getString(R.string.app_name), message, isCancellable);
+    }
+
     protected void setLoggedInPreference(boolean value) {
         mEditor.putBoolean("isLoggedIn", value).commit();
     }
@@ -51,6 +68,29 @@ public class BaseActivity<T> extends AppCompatActivity {
 
     protected String getLoggedInUserId() {
         return mPreference.getString("loggedInUserId", "");
+    }
+
+
+    protected void setProgressLayout(int layoutProgress) {
+        mProgressLayout = findViewById(layoutProgress);
+        if (mProgressLayout != null)
+            mTvProgressMessage = (TextView) mProgressLayout.findViewById(R.id.tvProgressMessage);
+    }
+
+    protected void showProgress() {
+        if (mProgressLayout != null)
+            mProgressLayout.setVisibility(View.VISIBLE);
+    }
+
+
+    protected void hidProgress() {
+        if (mProgressLayout != null)
+            mProgressLayout.setVisibility(View.GONE);
+    }
+
+    protected void setProgressMessage(String message) {
+        if (mTvProgressMessage != null)
+            mTvProgressMessage.setText(message);
     }
 
 }

@@ -26,4 +26,8 @@
     <string name="add">Add</string>
     <string name="error_network">Sorry, something went wrong please try again later...</string>
     <string name="info_success_payment">Expense added successfully</string>
+    <string name="ok">Ok</string>
+    <string name="label_pick_image_intent">Select or Capture Image</string>
+    <string name="permission_camera">Please allow camera and storage permission to upload bill image</string>
+    <string name="error_add_expense">Something went wrong not able to add expense at this moment, please try again later.</string>
 </resources>

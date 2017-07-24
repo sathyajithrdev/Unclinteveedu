@@ -7,6 +7,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorGreen">#15b600</color>
     <color name="colorRed">#ff0e0e</color>
+    <color name="colorBgImage">#d8918b8b</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorTransparent">#00ffffff</color>
 </resources>
