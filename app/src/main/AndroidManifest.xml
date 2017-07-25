@@ -33,6 +33,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ExpenseDetailActivity" />
         <activity android:name=".activities.PaymentActivity" />
+        <activity
+            android:name=".activities.UserDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -300,7 +300,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void isItemClicked() {
+    public void isItemClicked(Object data) {
         findViewById(R.id.tvErrorPayee).setVisibility(View.INVISIBLE);
         findViewById(R.id.tvErrorPaidTo).setVisibility(View.INVISIBLE);
     }

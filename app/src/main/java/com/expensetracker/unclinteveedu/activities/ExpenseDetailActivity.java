@@ -286,8 +286,7 @@ public class ExpenseDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void isItemClicked() {
+    public void isItemClicked(Object data) {
         findViewById(R.id.tvErrorPayee).setVisibility(View.INVISIBLE);
-
     }
 }

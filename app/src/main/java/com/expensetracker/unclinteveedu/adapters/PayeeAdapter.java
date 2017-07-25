@@ -49,7 +49,7 @@ public class PayeeAdapter extends RecyclerView.Adapter<PayeeAdapter.PayeeViewHol
             @Override
             public void onClick(View v) {
                 selectedPosition = holder.getAdapterPosition();
-                mClickListener.isItemClicked();
+                mClickListener.isItemClicked(null);
                 notifyDataSetChanged();
             }
         });

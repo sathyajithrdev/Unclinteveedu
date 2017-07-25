@@ -1,6 +1,7 @@
 package com.expensetracker.unclinteveedu.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.activities.UserDetailActivity;
 import com.expensetracker.unclinteveedu.adapters.UserAdapter;
+import com.expensetracker.unclinteveedu.interfaces.ClickListener;
 import com.expensetracker.unclinteveedu.managers.DatabaseManager;
 import com.expensetracker.unclinteveedu.models.ExpenseData;
 import com.expensetracker.unclinteveedu.models.UserModel;
@@ -29,7 +32,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements ClickListener {
 
     private UserAdapter mUserAdapter;
     private List<UserModel> mUserList;
@@ -65,7 +68,7 @@ public class HomeFragment extends Fragment {
 
     private void initializeView(View view) {
         RecyclerView mRvUser = (RecyclerView) view.findViewById(R.id.rvUsers);
-        mUserAdapter = new UserAdapter(this.getActivity());
+        mUserAdapter = new UserAdapter(this.getActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         gridLayoutManager.setSpanSizeLookup(new UserSpanSizeLookup());
         mRvUser.setLayoutManager(gridLayoutManager);
@@ -88,7 +91,7 @@ public class HomeFragment extends Fragment {
                     Double userPaidAmount = userSpentData.get(userId);
                     userSpentData.put(userId, userPaidAmount == null ? amount : userPaidAmount + amount);
                 }
-
+                mDatabaseManager.saveExpenseDetails(mAllExpenses);
 
                 final double finalTotalExpense = totalExpense;
                 mUsersReference.addValueEventListener(new ValueEventListener() {
@@ -146,6 +149,11 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mDatabaseManager.onDestroy();
+    }
+
+    @Override
+    public void isItemClicked(Object data) {
+        startActivity(new Intent(getActivity(), UserDetailActivity.class).putExtra("userId", ((UserModel) data).userId));
     }
 
     private class UserSpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
