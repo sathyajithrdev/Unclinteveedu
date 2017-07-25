@@ -37,4 +37,7 @@
     <string name="paid_to">Paid To</string>
     <string name="paid_to_mandatory">Please select paid to user name</string>
     <string name="payee_mandatory">Please select the payee name</string>
+    <string name="no_payments">No payments made yet!!</string>
+    <string name="no_expenses">No Expenses added yet!!</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -198,6 +198,7 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
         expenseData.paidByUser = mPayeeAdapter.getSelectedUserId();
         expenseData.paidToUser = mPaidToAdapter.getSelectedUserId();
         expenseData.paymentDate = getEtText(R.id.etDate);
+        expenseData.isPayment = true;
         expenseData.createdDate = sdf.format(Calendar.getInstance().getTime());
         expenseData.createdUser = getLoggedInUserId();
         if (firebaseImageUrl != null)

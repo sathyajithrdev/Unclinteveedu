@@ -64,4 +64,10 @@ public class UserDetailActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDatabaseManager.onDestroy();
+    }
 }

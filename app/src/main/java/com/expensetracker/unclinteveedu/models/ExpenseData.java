@@ -11,6 +11,7 @@ public class ExpenseData extends RealmObject {
     @PrimaryKey
     public String id;
     public String expenseName;
+    public boolean isPayment;
     public double amount;
     public String paymentDate;
     public String paidByUser;

@@ -1,7 +1,6 @@
 package com.expensetracker.unclinteveedu.adapters;
 
 import android.content.Context;
-import android.support.constraint.solver.Goal;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,30 +10,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.swipe.SwipeLayout;
+import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.expensetracker.unclinteveedu.R;
-import com.expensetracker.unclinteveedu.interfaces.ClickListener;
+import com.expensetracker.unclinteveedu.interfaces.UserExpenseActionListener;
 import com.expensetracker.unclinteveedu.models.ExpenseData;
-import com.expensetracker.unclinteveedu.models.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by sathy on 7/25/2017.
+ * Adapter class for listing expense or payment done by user
  */
 
-public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.UserExpenseViewHolder> {
+public class UserExpenseAdapter extends RecyclerSwipeAdapter<UserExpenseAdapter.UserExpenseViewHolder> {
 
     private Context mContext;
     private List<ExpenseData> mExpenseDataList;
-    private ClickListener mClickListener;
+    private Map<String, String> mAllUserName;
+    private UserExpenseActionListener mListener;
     private boolean mIsPaymentMode;
+    private int deletingItemPosition;
 
-    public UserExpenseAdapter(Context context, ClickListener clickListener, boolean isPaymentMode, List<ExpenseData> expenseDataList) {
+    public UserExpenseAdapter(Context context, UserExpenseActionListener clickListener, boolean isPaymentMode, List<ExpenseData> expenseDataList, Map<String, String> allUserNames) {
         this.mContext = context;
         mExpenseDataList = (expenseDataList == null ? new ArrayList<ExpenseData>() : expenseDataList);
-        mClickListener = clickListener;
+        mListener = clickListener;
         mIsPaymentMode = isPaymentMode;
+        mAllUserName = allUserNames;
     }
 
     @Override
@@ -45,23 +50,57 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
     }
 
     @Override
-    public void onBindViewHolder(UserExpenseViewHolder holder, int position) {
-        holder.mTvPaidTo.setVisibility(mIsPaymentMode ? View.VISIBLE : View.GONE);
-        ExpenseData expenseData = mExpenseDataList.get(position);
+    public void onBindViewHolder(final UserExpenseViewHolder holder, int position) {
+        final ExpenseData expenseData = mExpenseDataList.get(position);
+        if (mIsPaymentMode) {
+            holder.mTvUserName.setText(String.format("Paid To: %s", mAllUserName.get(expenseData.paidToUser)));
+        } else {
+            String userName = mAllUserName.get(expenseData.paidByUser);
+            if (userName == null || userName.equals("")) {
+                holder.mTvUserName.setVisibility(View.GONE);
+            } else {
+                holder.mTvUserName.setText(String.format("Payee: %s", userName));
+            }
+        }
         holder.mTvExpenseName.setText(expenseData.expenseName);
-        holder.mTvDate.setText(expenseData.paymentDate);
-        holder.mTvPaidTo.setText(expenseData.paidToUser);
-        holder.mTvAmount.setText(String.valueOf(expenseData.amount));
+        holder.mTvDate.setText(String.format("Transaction Date : %s", expenseData.paymentDate));
+        holder.mTvAmount.setText(String.format("Amount : %s", String.valueOf(expenseData.amount)));
         Glide.with(mContext)
                 .load(expenseData.imageUrl)
                 .placeholder(ContextCompat.getDrawable(mContext, R.drawable.ic_place_holder))
                 .centerCrop()
                 .into(holder.mIvBill);
+
+        holder.buttonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.swipeLayout.toggle();
+                deletingItemPosition = holder.getAdapterPosition();
+                mListener.deleteData(expenseData);
+            }
+        });
+
+        // mItemManger is member in RecyclerSwipeAdapter Class
+        mItemManger.bindView(holder.itemView, position);
     }
 
     @Override
     public int getItemCount() {
         return mExpenseDataList.size();
+    }
+
+    @Override
+    public int getSwipeLayoutResourceId(int position) {
+        return R.id.swipe;
+    }
+
+    public void expenseDeleted() {
+        mExpenseDataList.remove(deletingItemPosition);
+        notifyItemRemoved(deletingItemPosition);
+    }
+
+    public void expenseDeleteErroredOut() {
+
     }
 
     class UserExpenseViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +109,9 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
         private TextView mTvExpenseName;
         private TextView mTvAmount;
         private TextView mTvDate;
-        private TextView mTvPaidTo;
+        private TextView mTvUserName;
+        private View buttonDelete;
+        private final SwipeLayout swipeLayout;
 
         private UserExpenseViewHolder(View itemView) {
             super(itemView);
@@ -78,7 +119,9 @@ public class UserExpenseAdapter extends RecyclerView.Adapter<UserExpenseAdapter.
             mTvExpenseName = (TextView) itemView.findViewById(R.id.tvExpenseName);
             mTvAmount = (TextView) itemView.findViewById(R.id.tvAmount);
             mTvDate = (TextView) itemView.findViewById(R.id.tvDate);
-            mTvPaidTo = (TextView) itemView.findViewById(R.id.tvPaidTo);
+            buttonDelete = itemView.findViewById(R.id.llDelete);
+            mTvUserName = (TextView) itemView.findViewById(R.id.tvUserName);
+            swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
         }
     }
 }

@@ -91,6 +91,7 @@ public class HomeFragment extends Fragment implements ClickListener {
                     Double userPaidAmount = userSpentData.get(userId);
                     userSpentData.put(userId, userPaidAmount == null ? amount : userPaidAmount + amount);
                 }
+
                 mDatabaseManager.saveExpenseDetails(mAllExpenses);
 
                 final double finalTotalExpense = totalExpense;
