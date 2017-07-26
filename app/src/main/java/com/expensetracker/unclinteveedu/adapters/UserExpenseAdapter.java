@@ -103,6 +103,11 @@ public class UserExpenseAdapter extends RecyclerSwipeAdapter<UserExpenseAdapter.
 
     }
 
+    public void setExpenseData(List<ExpenseData> expenseData) {
+        this.mExpenseDataList = expenseData;
+        notifyDataSetChanged();
+    }
+
     class UserExpenseViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvBill;

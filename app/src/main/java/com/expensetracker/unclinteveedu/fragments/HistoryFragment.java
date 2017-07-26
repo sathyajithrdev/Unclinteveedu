@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,9 @@ public class HistoryFragment extends BaseFragment implements UserExpenseActionLi
     private UserExpenseAdapter userExpenseAdapter;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
     private View mParentView;
+    private boolean mIsFirstLoad;
+    private RecyclerView rvUserExpenseData;
+    private TextView tvNoTransaction;
 
     public static HistoryFragment newInstance() {
 
@@ -59,25 +63,36 @@ public class HistoryFragment extends BaseFragment implements UserExpenseActionLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+        mIsFirstLoad = true;
         mParentView = view.findViewById(R.id.flHistory);
         setProgressLayout(view, R.id.layoutProgress);
         databaseManager = new DatabaseManager();
-        List<ExpenseData> expenseDataList = databaseManager.getAllExpenseDetails();
         Map<String, String> allUserNames = new HashMap<>();
         for (UserModel um : databaseManager.getAllUserDetails()) {
             allUserNames.put(um.userId, um.name);
         }
-        RecyclerView rvUserExpenseData = (RecyclerView) view.findViewById(R.id.rvAllExpense);
+        tvNoTransaction = (TextView) view.findViewById(R.id.tvNoTransaction);
+        rvUserExpenseData = (RecyclerView) view.findViewById(R.id.rvAllExpense);
         rvUserExpenseData.setLayoutManager(new LinearLayoutManager(getActivity()));
-        userExpenseAdapter = new UserExpenseAdapter(getActivity(), this, false, expenseDataList, allUserNames);
+        userExpenseAdapter = new UserExpenseAdapter(getActivity(), this, false, new ArrayList<ExpenseData>(), allUserNames);
         rvUserExpenseData.setAdapter(userExpenseAdapter);
-        if (expenseDataList.size() == 0) {
-            TextView tvNoTransaction = (TextView) view.findViewById(R.id.tvNoTransaction);
-            tvNoTransaction.setVisibility(View.VISIBLE);
-            rvUserExpenseData.setVisibility(View.INVISIBLE);
-        }
+
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mIsFirstLoad || ((BaseActivity) getActivity()).getIsHistoryRefreshNeeded()) {
+            List<ExpenseData> expenseDataList = databaseManager.getAllExpenseDetails();
+            userExpenseAdapter.setExpenseData(expenseDataList);
+            if (expenseDataList.size() == 0) {
+                tvNoTransaction.setVisibility(View.VISIBLE);
+                rvUserExpenseData.setVisibility(View.INVISIBLE);
+            }
+        }
+        ((BaseActivity) getActivity()).setHistoryRefreshNeeded(false);
     }
 
     @Override

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.activities.BaseActivity;
 import com.expensetracker.unclinteveedu.activities.UserDetailActivity;
 import com.expensetracker.unclinteveedu.adapters.UserAdapter;
 import com.expensetracker.unclinteveedu.animators.SlideInLeftAnimator;
@@ -33,7 +34,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements ClickListener {
+public class HomeFragment extends BaseFragment implements ClickListener {
 
     private UserAdapter mUserAdapter;
     private List<UserModel> mUserList;
@@ -81,6 +82,7 @@ public class HomeFragment extends Fragment implements ClickListener {
         database.getReference("expenses").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                ((BaseActivity) getActivity()).setHistoryRefreshNeeded(true);
                 double totalExpense = 0;
                 mAllExpenses = new ArrayList<>();
                 mDatabaseManager.deleteAllExpense();
@@ -102,7 +104,7 @@ public class HomeFragment extends Fragment implements ClickListener {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Map<String, Double> userReceivedAmountData = new HashMap<>();
-
+                        ((BaseActivity) getActivity()).setHistoryRefreshNeeded(true);
                         mUserList = new ArrayList<>();
                         mUserAdapter.clearUserList();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
