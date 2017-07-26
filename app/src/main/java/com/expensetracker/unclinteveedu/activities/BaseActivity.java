@@ -74,6 +74,14 @@ public class BaseActivity<T> extends AppCompatActivity {
         return (!mPreference.getString("loggedInUserId", "").equals("") && mPreference.getBoolean("isLoggedIn", false));
     }
 
+    public boolean getIsHistoryRefreshNeeded() {
+        return (!mPreference.getBoolean("historyRefresh", false));
+    }
+
+    public void setHistoryRefreshNeeded(boolean needed) {
+        mEditor.putBoolean("historyRefresh", needed).commit();
+    }
+
 
     protected void setProgressLayout(int layoutProgress) {
         mProgressLayout = findViewById(layoutProgress);
