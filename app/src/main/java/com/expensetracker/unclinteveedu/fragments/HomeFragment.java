@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.expensetracker.unclinteveedu.R;
 import com.expensetracker.unclinteveedu.activities.UserDetailActivity;
 import com.expensetracker.unclinteveedu.adapters.UserAdapter;
+import com.expensetracker.unclinteveedu.animators.SlideInLeftAnimator;
 import com.expensetracker.unclinteveedu.interfaces.ClickListener;
 import com.expensetracker.unclinteveedu.managers.DatabaseManager;
 import com.expensetracker.unclinteveedu.models.ExpenseData;
@@ -68,6 +69,7 @@ public class HomeFragment extends Fragment implements ClickListener {
 
     private void initializeView(View view) {
         RecyclerView mRvUser = (RecyclerView) view.findViewById(R.id.rvUsers);
+        mRvUser.setItemAnimator(new SlideInLeftAnimator());
         mUserAdapter = new UserAdapter(this.getActivity(), this);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this.getActivity(), 2);
         gridLayoutManager.setSpanSizeLookup(new UserSpanSizeLookup());
@@ -81,6 +83,7 @@ public class HomeFragment extends Fragment implements ClickListener {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 double totalExpense = 0;
                 mAllExpenses = new ArrayList<>();
+                mDatabaseManager.deleteAllExpense();
                 final Map<String, Double> userSpentData = new HashMap<>();
 
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
@@ -101,6 +104,7 @@ public class HomeFragment extends Fragment implements ClickListener {
                         final Map<String, Double> userReceivedAmountData = new HashMap<>();
 
                         mUserList = new ArrayList<>();
+                        mUserAdapter.clearUserList();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             UserModel userData = ds.getValue(UserModel.class);
                             Double currentUserPayment = userSpentData.get(userData.userId);

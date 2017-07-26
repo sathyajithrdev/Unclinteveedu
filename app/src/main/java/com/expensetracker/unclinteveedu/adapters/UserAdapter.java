@@ -73,8 +73,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public void setUserList(List<UserModel> userList) {
+        int insertFromPosition = userList.size();
         mUserList = userList;
-        this.notifyDataSetChanged();
+        this.notifyItemRangeInserted(insertFromPosition, mUserList.size());
+    }
+
+    public void clearUserList() {
+        mUserList = new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     class UserViewHolder extends RecyclerView.ViewHolder {

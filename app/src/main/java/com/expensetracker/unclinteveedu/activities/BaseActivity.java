@@ -57,7 +57,7 @@ public class BaseActivity<T> extends AppCompatActivity {
         mAlertHelper.showAlert(getString(R.string.app_name), message, isCancellable);
     }
 
-    protected void setLoggedInPreference(boolean value) {
+    protected void setIsUserLoggedIn(boolean value) {
         mEditor.putBoolean("isLoggedIn", value).commit();
     }
 
@@ -66,8 +66,12 @@ public class BaseActivity<T> extends AppCompatActivity {
         mEditor.putString("loggedInUserId", userId).commit();
     }
 
-    protected String getLoggedInUserId() {
+    public String getLoggedInUserId() {
         return mPreference.getString("loggedInUserId", "");
+    }
+
+    public boolean getIsUserLoggedIn() {
+        return (!mPreference.getString("loggedInUserId", "").equals("") && mPreference.getBoolean("isLoggedIn", false));
     }
 
 

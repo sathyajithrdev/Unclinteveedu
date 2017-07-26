@@ -148,9 +148,9 @@ public final class ImageCompressor {
 
             // write the compressed bitmap at the destination specified by filename.
             scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, out);
-            if (bmp != null && !bmp.isRecycled())
+            if (!bmp.isRecycled())
                 bmp.recycle();
-            if (scaledBitmap != null && !scaledBitmap.isRecycled())
+            if (!scaledBitmap.isRecycled())
                 scaledBitmap.recycle();
             out.close();
         } catch (IOException e) {
@@ -212,18 +212,4 @@ public final class ImageCompressor {
         return inSampleSize;
     }
 
-    public static Bitmap decodeSampledBitmapFromFile(File file, int reqWidth, int reqHeight) {
-
-        // First decode with inJustDecodeBounds=true to check dimensions
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(file.getPath(), options);
-
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-
-        // Decode bitmap with inSampleSize set
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeFile(file.getPath(), options);
-    }
 }

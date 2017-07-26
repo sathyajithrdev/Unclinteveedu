@@ -8,6 +8,7 @@ import com.expensetracker.unclinteveedu.R;
 
 /**
  * Created by sathyajith on 26/07/17.
+ * Base fragment having common functionalities
  */
 
 public class BaseFragment extends Fragment {

@@ -79,4 +79,13 @@ public class DatabaseManager {
             }
         });
     }
+
+    public void deleteAllExpense() {
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.where(ExpenseData.class).findAll().deleteAllFromRealm();
+            }
+        });
+    }
 }

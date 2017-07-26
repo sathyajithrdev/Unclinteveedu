@@ -39,6 +39,9 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if (getIsUserLoggedIn()) {
+            moveToHomeScreen();
+        }
         // Set up the login form.
         mTvUserName = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -100,12 +103,11 @@ public class LoginActivity extends BaseActivity {
                     if (dataSnapshot != null) {
                         for (DataSnapshot d : dataSnapshot.getChildren()) {
                             if (d.child("password").getValue().toString().equals(password)) {
-                                setLoggedInPreference(true);
+                                setIsUserLoggedIn(true);
                                 setLoggedInUserId(d.child("userId").getValue().toString());
                                 showProgress(false);
                                 isValid = true;
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                LoginActivity.this.supportFinishAfterTransition();
+                                moveToHomeScreen();
                                 break;
                             }
                         }
@@ -118,13 +120,17 @@ public class LoginActivity extends BaseActivity {
 
                 }
 
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     showProgress(false);
                 }
             });
         }
+    }
+
+    private void moveToHomeScreen() {
+        startActivity(new Intent(this, MainActivity.class));
+        supportFinishAfterTransition();
     }
 
     private boolean isPasswordValid(String password) {

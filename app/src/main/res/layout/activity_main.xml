@@ -30,35 +30,48 @@
                 android:id="@+id/image"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
                 android:paddingTop="10dp"
                 android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax"
                 app:srcCompat="@drawable/ic_man">
 
+                <ImageView
+                    android:id="@+id/ivApp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_app" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Expense Tracker"
-                    android:textSize="24dp" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@+id/ivApp"
+                    android:layout_toStartOf="@+id/ivSettings"
+                    android:text="@string/expense_tracker"
+                    android:textSize="20sp" />
 
                 <ImageView
-                    android:id="@+id/ivAddPayment"
+                    android:id="@+id/ivSettings"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="16dp"
-                    android:layout_toStartOf="@+id/ivAddExpense"
-                    app:srcCompat="@drawable/ic_payment" />
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/ivLogout"
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_settings" />
 
                 <ImageView
-                    android:id="@+id/ivAddExpense"
+                    android:id="@+id/ivLogout"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    app:srcCompat="@drawable/ic_add_expense" />
+                    android:contentDescription="@null"
+                    app:srcCompat="@drawable/ic_logout" />
             </RelativeLayout>
         </android.support.v7.widget.Toolbar>
 
@@ -84,6 +97,51 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutBooked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:background="@drawable/gradient_background_blue"
+        android:orientation="horizontal"
+        app:layout_behavior="com.expensetracker.unclinteveedu.helpers.QuickReturnFloaterBehavior">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/ivAddExpense"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_add_expense"
+            android:gravity="center"
+            android:text="@string/add_expense"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/btnBreaker"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@color/colorTransparentGrey" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/ivAddPayment"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_payment"
+            android:gravity="center"
+            android:text="@string/make_payment"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
+
     </LinearLayout>
 
 

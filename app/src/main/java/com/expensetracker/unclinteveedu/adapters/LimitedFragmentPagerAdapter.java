@@ -2,18 +2,16 @@ package com.expensetracker.unclinteveedu.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
-import com.expensetracker.unclinteveedu.fragments.HistoryFragment;
-import com.expensetracker.unclinteveedu.fragments.HomeFragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
 /**
  * Created by sathy on 7/25/2017.
+ * Common pager adapter to use with tabs
  */
 
-public class LimitedFragmentPagerAdapter extends FragmentPagerAdapter {
+public class LimitedFragmentPagerAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> mFragmentList;
     private List<String> mHeaders;
 

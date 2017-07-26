@@ -2,6 +2,8 @@ package com.expensetracker.unclinteveedu.fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.expensetracker.unclinteveedu.R;
+import com.expensetracker.unclinteveedu.activities.BaseActivity;
 import com.expensetracker.unclinteveedu.adapters.UserExpenseAdapter;
 import com.expensetracker.unclinteveedu.interfaces.UserExpenseActionListener;
 import com.expensetracker.unclinteveedu.managers.DatabaseManager;
@@ -37,6 +40,7 @@ public class UserPaymentsFragment extends BaseFragment implements UserExpenseAct
     private DatabaseManager databaseManager;
     private boolean mIsPaymentMode;
     private UserExpenseAdapter userExpenseAdapter;
+    private View mParentView;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yy", Locale.getDefault());
 
     public UserPaymentsFragment() {
@@ -59,6 +63,7 @@ public class UserPaymentsFragment extends BaseFragment implements UserExpenseAct
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_payments, container, false);
+        mParentView = view.findViewById(R.id.flUserPayment);
         setProgressLayout(view, R.id.layoutProgress);
         mIsPaymentMode = getArguments().getBoolean("isPaymentMode");
         databaseManager = new DatabaseManager();
@@ -96,14 +101,17 @@ public class UserPaymentsFragment extends BaseFragment implements UserExpenseAct
 
     @Override
     public void deleteData(Object data) {
-
+        final ExpenseData dataToDelete = (ExpenseData) data;
+        if (!dataToDelete.paidByUser.equals(((BaseActivity) getActivity()).getLoggedInUserId())) {
+            Snackbar.make(mParentView, String.format("You can only delete the %s by you..", mIsPaymentMode ? "payment made" : "expense paid"), BaseTransientBottomBar.LENGTH_LONG).show();
+            return;
+        }
         setProgressMessage(String.format("Deleting %s data, please wait....", mIsPaymentMode ? "payment" : "expense"));
         showProgress();
-        final ExpenseData dataToDelete = (ExpenseData) data;
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference archiveRef = database.getReference("expenseArchive");
 
         dataToDelete.createdDate = sdf.format(Calendar.getInstance().getTime());
-        DatabaseReference archiveRef = database.getReference("expenseArchive");
         String archiveId = archiveRef.push().getKey();
         archiveRef.child(archiveId).setValue(dataToDelete, new DatabaseReference.CompletionListener() {
             @Override

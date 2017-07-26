@@ -48,6 +48,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_history);
         findViewById(R.id.ivAddPayment).setOnClickListener(this);
         findViewById(R.id.ivAddExpense).setOnClickListener(this);
+        findViewById(R.id.ivSettings).setOnClickListener(this);
+        findViewById(R.id.ivLogout).setOnClickListener(this);
     }
 
     @Override
@@ -57,10 +59,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(new Intent(MainActivity.this, ExpenseDetailActivity.class));
                 break;
             }
-
             case R.id.ivAddPayment: {
                 startActivity(new Intent(MainActivity.this, PaymentActivity.class));
                 break;
+            }
+            case R.id.ivLogout: {
+                setIsUserLoggedIn(false);
+                setLoggedInUserId("");
+                startActivity(new Intent(this, LoginActivity.class));
+                supportFinishAfterTransition();
             }
 
         }

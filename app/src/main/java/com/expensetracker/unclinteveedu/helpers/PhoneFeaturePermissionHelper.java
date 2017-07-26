@@ -126,7 +126,7 @@ public class PhoneFeaturePermissionHelper {
         return featuresGranted;
     }
 
-    public Activity getActivity() {
+    private Activity getActivity() {
         return mActivity == null ? mFragment.getActivity() : mActivity;
     }
 

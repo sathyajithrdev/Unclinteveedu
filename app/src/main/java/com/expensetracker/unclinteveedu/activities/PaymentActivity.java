@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -168,13 +170,18 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
             mEtExpenseName.requestFocus();
         }
 
-        if (mPayeeAdapter.getSelectedUserId() == null) {
+        if (mPayeeAdapter.getSelectedUserId() == null || mPayeeAdapter.getSelectedUserId().equals("")) {
             findViewById(R.id.tvErrorPayee).setVisibility(View.VISIBLE);
             isValid = false;
         }
 
-        if (mPaidToAdapter.getSelectedUserId() == null) {
+        if (mPaidToAdapter.getSelectedUserId() == null || mPaidToAdapter.getSelectedUserId().equals("")) {
             findViewById(R.id.tvErrorPaidTo).setVisibility(View.VISIBLE);
+            isValid = false;
+        }
+
+        if (isValid && mPaidToAdapter.getSelectedUserId().equals(mPayeeAdapter.getSelectedUserId())) {
+            Snackbar.make(findViewById(R.id.rlPayment), "Payee and paid to user can't be the same", BaseTransientBottomBar.LENGTH_LONG).show();
             isValid = false;
         }
 
@@ -259,6 +266,16 @@ public class PaymentActivity extends BaseActivity implements View.OnClickListene
     @Override
     public void phoneFeaturePermissionDenied(int requestCode, List<String> featuresAuthenticated) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PhoneFeaturePermissionHelper.REQUEST_PHONE_FEATURES_PERMISSION:
+                mPhoneFeaturePermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
     }
 
     private String compressImage(Uri uri) {

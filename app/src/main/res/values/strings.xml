@@ -40,4 +40,6 @@
     <string name="no_payments">No payments made yet!!</string>
     <string name="no_expenses">No Expenses added yet!!</string>
     <string name="delete">Delete</string>
+    <string name="expense_tracker">Expense Tracker</string>
+    <string name="make_payment">Make Payment</string>
 </resources>
